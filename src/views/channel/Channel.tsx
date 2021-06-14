@@ -249,8 +249,8 @@ class Channel extends React.Component<ChannelProps, ChannelState> {
       ? true : false;
     const videoLatestId = isOneLevelAndChildrenGtTwo === true
       ? m.params.rId : this.currentPartition.children.length > 1 // 二级分类有两个或以上取当前二级分类
-      ? this.currentPartition.children[secondTabIndex - 1].id :
-      this.currentPartition.children[0].id;  // 只有一个二级分类取第一个
+      ? this.currentPartition.children[secondTabIndex - 1]&&this.currentPartition.children[secondTabIndex - 1].id :
+      this.currentPartition.children[0] && this.currentPartition.children[0] .id;  // 只有一个二级分类取第一个
     return (
       <div className="channel">
         <Helmet>
@@ -315,7 +315,7 @@ class Channel extends React.Component<ChannelProps, ChannelState> {
                   getPicUrl={(url, format) => this.getPicUrl(url, format)} />
               )
             ) : (
-              <VideoLatest id={videoLatestId} getPicUrl={(url, format) => this.getPicUrl(url, format)} />
+              videoLatestId == undefined ? null : <VideoLatest id={videoLatestId} getPicUrl={(url, format) => this.getPicUrl(url, format)} />
             )
           }
         </div>

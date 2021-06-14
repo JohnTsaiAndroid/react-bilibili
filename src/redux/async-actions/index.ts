@@ -22,7 +22,7 @@ export default function getIndexContent() {
         const partitions = result1.data["0"];
         let oneLevels =  createPartitionTypes(partitions);
         // 过滤掉 番剧，电影，电视剧，纪录片
-        oneLevels = oneLevels.filter((partition) => [13, 23, 11, 177].indexOf(partition.id) === -1);
+        // oneLevels = oneLevels.filter((partition) => [13, 23, 11, 177].indexOf(partition.id) === -1);
         dispatch(setOneLevelPartitions(oneLevels));
       }
       if (result2.code === "1") {

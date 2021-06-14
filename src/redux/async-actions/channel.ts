@@ -9,7 +9,7 @@ export default function getPartitionList() {
       if (result.code === "1") {
         let partitions = createPartitionTypesTree(result.data);
         // 过滤掉 番剧，电影，电视剧，纪录片
-        partitions = partitions.filter((partition) => [13, 23, 11, 177].indexOf(partition.id) === -1);
+        // partitions = partitions.filter((partition) => [13, 23, 11, 177].indexOf(partition.id) === -1);
         dispatch(setPartitions(partitions));
       }
     });

@@ -13,7 +13,7 @@ export function getRankingVideoList(rId: number) {
       if (result1.code === "1") {
         let partitions = createPartitionTypes(result1.data);
         // 过滤掉 番剧，电影，电视剧，纪录片
-        partitions = partitions.filter((partition) => [13, 23, 11, 177].indexOf(partition.id) === -1);
+        // partitions = partitions.filter((partition) => [13, 23, 11, 177].indexOf(partition.id) === -1);
         dispatch(setRankingPartitions(partitions));
       }
       if (result2.code === "1") {

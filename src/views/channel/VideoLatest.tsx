@@ -46,6 +46,9 @@ class VideoLatest extends React.Component<VideoLatestProps, VideoLatestState> {
     this.loadLatestData(this.props.id, 1);
   }
   private loadLatestData(id, p) {
+    if(id == undefined) {
+      return;
+    }
     this.setState({
       loading: true
     });
@@ -67,10 +70,9 @@ class VideoLatest extends React.Component<VideoLatestProps, VideoLatestState> {
     }
   }
   public render() {
-    /* const data = [];
-    for (let i = 0; i < 4; i++) {
-      data.push(new Video(0, "茶理理一人成团！用四种声线翻唱POP/STARS【英雄联盟K/DA全球热单】", "", "", 111111, 111111, 0, 0, 0));
-    } */
+    if(this.props.id == undefined) {
+      return null;
+    }
     return (
       <div className={style.videoLatest}>
         <div className={style.title}>最新视频</div>
