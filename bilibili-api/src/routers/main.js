@@ -14,10 +14,14 @@ const partitionData = {
     {tid: 23, typename: "电影"}, {tid: 11, typename: "电视剧"}
   ],
   1: [
-    {tid: 33, typename: "MAD·AMV"}, {tid: 32, typename: "MMD·3D"}, {tid: 51, typename: "短片·手书·配音"},
-    {tid: 152, typename: "特摄"}, {tid: 27, typename: "综合"}
+    {tid: 24, typename: "MAD·AMV"}, {tid: 25, typename: "MMD·3D"}, {tid:47, typename: "短片·手书·配音"},
+    {tid: 86, typename: "特摄"}, {tid: 27, typename: "综合"},{tid: 210, typename: "手办模玩"}
   ],
-  13: [],
+  13: [
+    {tid: 33, typename: "连载动画"},
+    {tid: 32, typename: "完结动画"},
+    {tid: 51, typename: "资讯"}
+  ],
   167: [
     {tid: 153, typename: "国产动画"}, {tid: 168, typename: "国产原创相关"}, {tid: 169, typename: "布袋戏"},
     {tid: 195, typename: "动态漫·广播剧"}, {tid: 170, typename: "资讯"}
@@ -64,9 +68,20 @@ const partitionData = {
     {tid: 184, typename: "预告·资讯"}
   ],
   166: [{tid: 166, typename: "广告"}],
-  177: [],
-  11: [],
-  23: []
+  177: [
+    {tid: 37, typename:"人文历史"},
+    {tid: 178, typename: "科学探索自然"},
+    {tid: 179, typename: "军事"},
+    {tid: 180, typename: "社会美食旅行"}
+  ],
+  11: [
+    {tid: 185, typename: "国产剧"},
+    {tid: 187,typename: "海外剧"}
+  ],
+  23: [
+    {tid: 147, typename: "华语电影"}, {tid: 145, typename: "欧美电影"}, {tid: 146, typename: "日本电影"},
+    {tid: 83, typename: "其他国家"}
+    ]
 }
 
 
