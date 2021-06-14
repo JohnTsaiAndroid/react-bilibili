@@ -18,7 +18,10 @@ class Video {
     public url: string,
     public owner: UpUser = null ,
     public twoLevel: PartitionType = null,
-    public oneLevel: PartitionType = null) {}
+    public oneLevel: PartitionType = null,
+    public relatedVideos: Array<Video> = new Array<Video>(),
+    public hotShareVideos: Array<Video> = new Array<Video>(),
+    ) {}
 }
 
 function createVideo(data): Video {
@@ -39,7 +42,16 @@ function createVideo(data): Video {
   );
 }
 
-function createVideoByDetail(data): Video {
+function createVideoByDetail(res, isFirst): Video {
+  let data = isFirst ? res.View: res;
+  let related = isFirst ? res.Related: null;
+  let hotShared = isFirst ? res.hot_share: null;
+  let relatedVideos = related && related.map(item => {
+     return createVideoByDetail(item, false);
+  });
+  let hotShareVideos = hotShared && hotShared.show && hotShared.list && hotShared.list.map(item => {
+     return createVideoByDetail(item, false);
+  });
   return new Video(
     data.aid,
     data.title,
@@ -53,6 +65,9 @@ function createVideoByDetail(data): Video {
     "",
     new UpUser(data.owner.mid, data.owner.name, data.owner.face),
     data.tid ? new PartitionType(data.tid, data.tname) : null,
+    null,
+      relatedVideos,
+      hotShareVideos
     // data.reid ? new PartitionType(data.reid, data.toptype) : null
   );
 }

@@ -14,7 +14,7 @@ const URL_RANKING_REGION = "https://api.bilibili.com/x/web-interface/ranking/reg
 // 当前分类排行
 const URL_RANKING_ARCHIVE = "https://api.bilibili.com/archive_rank/getarchiverankbypartion?tid={tid}&pn={p}";
 // 视频详情
-const URL_VIDEO_DETAIL = "https://api.bilibili.com/x/web-interface/view?aid={aid}&bvid=";
+const URL_VIDEO_DETAIL = "https://api.bilibili.com/x/web-interface/view/detail?aid={aid}&bvid=&need_hot_share=1";
 // 详情推荐
 // const URL_RECOMMEND = "https://comment.bilibili.com/recommendnew,{aid}";
 const URL_RECOMMEND = "https://api.bilibili.com/x/web-interface/archive/related?aid={aid}&context=";

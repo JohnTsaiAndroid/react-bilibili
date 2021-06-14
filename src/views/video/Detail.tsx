@@ -61,7 +61,6 @@ interface DetailProps {
 
 interface DetailState {
     loading: boolean;
-    recommendVides: Video[];
     showLoadMore: boolean;
     comments: any;
     currentTabIndex: number;
@@ -92,15 +91,13 @@ class Detail extends React.Component<DetailProps, DetailState> {
 
         this.state = {
             loading: true,
-            recommendVides: [],
             showLoadMore: true,
             comments: [],
-            currentTabIndex: 0,
+            currentTabIndex: 1,
         }
     }
 
     public componentDidMount() {
-        this.getRecommentVides();
         this.getComments();
 
         // 记录当前视频信息
@@ -113,25 +110,13 @@ class Detail extends React.Component<DetailProps, DetailState> {
         });
     }
 
-    private getRecommentVides() {
-        getRecommendVides(this.props.match.params.aId).then((result) => {
-            if (result.code === "1") {
-                const recommendVides = result.data.map((item) => createVideo(item));
-                this.setState({
-                    loading: false,
-                    recommendVides
-                });
-            }
-        });
-    }
-
     private getComments() {
         getComments(this.props.match.params.aId, this.commentPage.pageNumber).then((result) => {
             if (result.code === "1") {
 
                 const page = result.data.page;
                 const maxPage = Math.ceil(page.count / page.size);
-                this.totalSize = page.count
+                this.totalSize = page.acount
                 const showLoadMore = this.commentPage.pageNumber < maxPage ? true : false;
 
                 this.commentPage = {
@@ -284,102 +269,61 @@ class Detail extends React.Component<DetailProps, DetailState> {
         );
     }
 
-    private renderTabView = () => {
-        let view = null;
-        switch (this.state.currentTabIndex) {
-            case 0:
-                break;
-            case 1: {/* 推荐列表 */
-            }
-                view = <div className={style.recommendList}>
-                    {
-                        this.state.recommendVides.map((v) => (
-                            <div className={style.videoWrapper} key={v.aId}>
-                                <a href={"/video/av" + v.aId}>
-                                    <div className={style.imageContainer}>
-                                        <LazyLoad height="10.575rem">
-                                            <img src={this.getPicUrl(v.pic, "@320w_200h")} alt={v.title}/>
-                                        </LazyLoad>
-                                        <div className={style.duration}>{formatDuration(v.duration, "0#:##:##")}</div>
-                                    </div>
-                                    <div className={style.infoWrapper}>
-                                        <div className={style.title}>
-                                            {v.title}
-                                        </div>
-                                        <div className={style.upUser}>
+    private getVideoListView = (videoList)=> {
+        {/* 推荐列表 */
+        }
+        return <div className={style.recommendList}>
+            {
+                videoList.map((v) => (
+                    <div className={style.videoWrapper} key={v.aId}>
+                        <a href={"/video/av" + v.aId}>
+                            <div className={style.imageContainer}>
+                                <LazyLoad height="10.575rem">
+                                    <img src={this.getPicUrl(v.pic, "@320w_200h")} alt={v.title}/>
+                                </LazyLoad>
+                                <div className={style.duration}>{formatDuration(v.duration, "0#:##:##")}</div>
+                            </div>
+                            <div className={style.infoWrapper}>
+                                <div className={style.title}>
+                                    {v.title}
+                                </div>
+                                <div className={style.upUser}>
                         <span onClick={(e) => {
                             e.preventDefault();
                             this.toSpace(v.owner.mId)
                         }}>
                           {v.owner.name}
                         </span>
-                                        </div>
-                                        <div className={style.videoInfo}>
-                                            <span>{formatTenThousand(v.playCount)}次观看</span>
-                                            <span>&nbsp;·&nbsp;</span>
-                                            <span>{formatTenThousand(v.barrageCount)}弹幕</span>
-                                        </div>
-                                    </div>
-                                </a>
+                                </div>
+                                <div className={style.videoInfo}>
+                                    <span>{formatTenThousand(v.playCount)}次观看</span>
+                                    <span>&nbsp;·&nbsp;</span>
+                                    <span>{formatTenThousand(v.barrageCount)}弹幕</span>
+                                </div>
                             </div>
-                        ))
-                    }
-                    {
-                        this.state.loading === true ? (
-                            <div className={style.loading}>加载中...</div>
-                        ) : null
-                    }
-                </div>;
+                        </a>
+                    </div>
+                ))
+            }
+            {
+                this.state.loading === true ? (
+                    <div className={style.loading}>加载中...</div>
+                ) : null
+            }
+        </div>;
+    }
+
+    private renderTabView = () => {
+        let view = null;
+        switch (this.state.currentTabIndex) {
+            case 0:
+                view = this.getVideoListView(this.props.video.hotShareVideos);
+                break;
+            case 1:
+                view = this.getVideoListView(this.props.video.relatedVideos);
                 break;
             case 2:
-                view = <div className={style.recommendList}>
-                    {
-                        this.state.comments.length > 0 ? (
-                            <div className={style.comment}>
-                                <div className={style.commentTitle}>
-                                    评论<span className={style.commentCount}>(&nbsp;{this.commentPage.count}&nbsp;)</span>
-                                </div>
-                                <div className={style.commentList}>
-                                    {
-                                        this.state.comments.map((comment, i) => (
-                                            <div className={style.commentWrapper} key={i}>
-                                                <Link to={"/space/" + comment.user.mId}>
-                                                    <LazyLoad height="2rem">
-                                                        <img className={style.commentUpPic}
-                                                             src={this.getPicUrl(comment.user.face, "@60w_60h")}
-                                                             alt={comment.user.name}/>
-                                                    </LazyLoad>
-                                                </Link>
-                                                <span className={style.commentTime}>{comment.date}</span>
-                                                <div className={style.commentUpUser}>
-                                                    <Link to={"/space/" + comment.user.mId}>
-                                                        {comment.user.name}
-                                                    </Link>
-                                                </div>
-                                                <div className={style.commentContent}>
-                                                    {comment.content}
-                                                </div>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                                {
-                                    this.state.showLoadMore === true ? (
-                                        <div className={style.loadMore} onClick={() => {
-                                            this.loadMoreComment()
-                                        }}>
-                                            点击加载更多评论
-                                        </div>
-                                    ) : (
-                                        <div className={style.noMore}>
-                                            没有更多了 ~
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        ) : null
-                    }
-                </div>;
+                view = this.getCommentsListView();
         }
         return view;
     }
@@ -389,6 +333,57 @@ class Detail extends React.Component<DetailProps, DetailState> {
             currentTabIndex: tab.id
         });
 
+    }
+
+    private getCommentsListView= ()=>{
+        return <div className={style.recommendList}>
+            {
+                this.state.comments.length > 0 ? (
+                    <div className={style.comment}>
+                        <div className={style.commentTitle}>
+                            评论<span className={style.commentCount}>(&nbsp;{this.commentPage.count}&nbsp;)</span>
+                        </div>
+                        <div className={style.commentList}>
+                            {
+                                this.state.comments.map((comment, i) => (
+                                    <div className={style.commentWrapper} key={i}>
+                                        <Link to={"/space/" + comment.user.mId}>
+                                            <LazyLoad height="2rem">
+                                                <img className={style.commentUpPic}
+                                                     src={this.getPicUrl(comment.user.face, "@60w_60h")}
+                                                     alt={comment.user.name}/>
+                                            </LazyLoad>
+                                        </Link>
+                                        <span className={style.commentTime}>{comment.date}</span>
+                                        <div className={style.commentUpUser}>
+                                            <Link to={"/space/" + comment.user.mId}>
+                                                {comment.user.name}
+                                            </Link>
+                                        </div>
+                                        <div className={style.commentContent}>
+                                            {comment.content}
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        {
+                            this.state.showLoadMore === true ? (
+                                <div className={style.loadMore} onClick={() => {
+                                    this.loadMoreComment()
+                                }}>
+                                    点击加载更多评论
+                                </div>
+                            ) : (
+                                <div className={style.noMore}>
+                                    没有更多了 ~
+                                </div>
+                            )
+                        }
+                    </div>
+                ) : null
+            }
+        </div>;
     }
 }
 
